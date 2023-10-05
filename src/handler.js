@@ -23,7 +23,7 @@ const addBookToShelf = (request, h) => {
   if (checkName) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal menambahkan buku, mohon isi nama buku'
+      message: 'Gagal menambahkan buku. Mohon isi nama buku'
     })
     response.code(400)
     return response
@@ -34,9 +34,10 @@ const addBookToShelf = (request, h) => {
   if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
-      message: 'Gagal menambahkan buku, readPage tidak boleh lebih besar dari pageCount'
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount'
     })
     response.code(400)
+    return response
   }
 
   // Adding a Book
@@ -126,6 +127,23 @@ const editBookByIdAtShelf = (request, h) => {
     reading
   } = request.payload
 
+  if (!name) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. Mohon isi nama buku'
+    })
+    response.code(400)
+    return response
+  }
+
+  if (readPage > pageCount) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount'
+    })
+    response.code(400)
+    return response
+  }
   const index = books.findIndex((book) => book.id === bookId)
   if (index !== -1) {
     books[index] = {
@@ -147,27 +165,10 @@ const editBookByIdAtShelf = (request, h) => {
     response.code(200)
     return response
   }
-  if (!name) {
-    const response = h.response({
-      status: 'fail',
-      message: 'Gagal diperbarui, mohon isi nama buku'
-    })
-    response.code(400)
-    return response
-  }
-
-  if (readPage > pageCount) {
-    const response = h.response({
-      status: 'fail',
-      message: 'Gagal diperbarui, readPage tidak boleh lebih besar dari pageCount'
-    })
-    response.code(400)
-    return response
-  }
 
   const response = h.response({
     status: 'fail',
-    message: 'Gagal memperbarui buku, ID tidak ditemukan'
+    message: 'Gagal memperbarui buku. Id tidak ditemukan'
   })
   response.code(404)
   return response
@@ -190,7 +191,7 @@ const deleteBookByIdAtShelf = (request, h) => {
 
   const response = h.response({
     status: 'fail',
-    message: 'Buku gagal dihapus'
+    message: 'Buku gagal dihapus. Id tidak ditemukan'
   })
   response.code(404)
   return response
